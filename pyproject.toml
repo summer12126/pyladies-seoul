@@ -1,0 +1,141 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pyladies-seoul"
+version = "0.1.0"
+description = "PyLadies Seoul Official Homepage"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "PyLadies Seoul", email = "seoul@pyladies.com"},
+]
+keywords = ["django", "pyladies", "community", "homepage"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Django",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+
+dependencies = [
+    "django>=5.2.4,<6.0",
+    "django-extensions>=3.2.3",
+    "django-tailwind>=4.1.0",
+    "django-htmx>=1.23.0",
+    "pillow>=11.0.0",
+    "python-dotenv>=1.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-django>=4.8.0",
+    "pytest-cov>=4.0.0",
+    "coverage>=7.0.0",
+    "factory-boy>=3.3.0",
+    "black>=24.0.0",
+    "isort>=5.13.0",
+    "flake8>=7.0.0",
+    "mypy>=1.8.0",
+    "django-stubs>=4.2.0",
+    "bandit>=1.7.0",
+    "safety>=3.0.0",
+    "pre-commit>=4.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/pyladies-seoul/homepage"
+Repository = "https://github.com/pyladies-seoul/homepage"
+Documentation = "https://github.com/pyladies-seoul/homepage/blob/main/README.md"
+"Bug Tracker" = "https://github.com/pyladies-seoul/homepage/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["main", "config"]
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | migrations
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+known_django = "django"
+sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+
+[tool.flake8]
+max-line-length = 120
+extend-exclude = [
+    ".venv",
+    "migrations",
+]
+
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "config.settings"
+
+[[tool.mypy.overrides]]
+module = [
+    "main.test_admin",
+    "main.test_factories",
+    "main.test_integration",
+    "main.test_models",
+    "main.test_utils",
+    "main.test_views",
+]
+disable_error_code = ["assignment", "attr-defined", "return-value"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = "--cov --cov-report=html --cov-report=term-missing"
+
+[tool.coverage.run]
+source = "."
+omit = [
+    "manage.py",
+    "*/migrations/*",
+    "*/venv/*",
+    "*/env/*",
+    "*/settings/*",
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[dependency-groups]
+dev = [
+    "factory-boy>=3.3.3",
+]

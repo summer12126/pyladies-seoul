@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Events | PyLadies Seoul{% endblock %}
+
+{% block description %}PyLadies Seoul 이벤트 및 활동 - 세미나, 워크숍, 네트워킹 등 다양한 프로그램{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    이벤트 & 활동
+                </h1>
+                <p class="text-xl md:text-2xl text-purple-100 mb-8">
+                    Events & Activities
+                </p>
+                <p class="text-lg text-purple-100 max-w-2xl mx-auto">
+                    PyLadies Seoul의 다양한 세미나, 워크숍, 네트워킹 이벤트를 만나보세요
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events List Section -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {% if events %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for event in events %}
+                        {% include 'components/event_card.html' with event=event %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                {% include 'components/empty_state.html' with icon=CALENDAR_ICON title='아직 등록된 이벤트가 없습니다' description='곧 새로운 이벤트가 공개될 예정입니다.' %}
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    {% include 'components/contact_section.html' with title='PyLadies Seoul에 참여하세요!' description='우리 커뮤니티에서 개최되는 다양한 이벤트와 활동에 참여하여 함께 성장하고 네트워킹할 수 있는 기회를 만나보세요.' %}
+</div>
+{% endblock %}

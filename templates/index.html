@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">PyLadies Seoul</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                {% if community_info %}
+                    {{ community_info.vision_ko }}
+                {% else %}
+                    여성 개발자 네트워킹과 성장을 지원하는 커뮤니티
+                {% endif %}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                {% include 'components/button.html' with style='secondary' text='Discord 참여하기' href=discord_url %}
+                {% include 'components/button.html' with style='outline' text='기여하기' href='/contribute/' %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Community Introduction -->
+<section id="introduction" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">PyLadies Seoul 소개</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                {% if community_info %}
+                    {{ community_info.mission_ko }}
+                {% else %}
+                    파이썬을 사랑하는 여성들이 모여 함께 성장하고 네트워킹하는 커뮤니티입니다.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming Events Section -->
+<section id="upcoming-events" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Upcoming Events</h2>
+            <p class="text-lg text-gray-600">다가오는 이벤트와 활동에 참여해보세요</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for event in upcoming_events %}
+                {% include 'components/event_card.html' with event=event %}
+            {% empty %}
+                <div class="col-span-full text-center py-8">
+                    <p class="text-gray-500">곧 새로운 이벤트가 공개될 예정입니다.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Past Events Section -->
+<section id="past-events" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">지난 이벤트</h2>
+            <p class="text-lg text-gray-600">지난 활동들과 성과를 확인해보세요</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for event in past_events %}
+                {% include 'components/event_card.html' with event=event %}
+            {% empty %}
+                <div class="col-span-full text-center py-8">
+                    <p class="text-gray-500">아직 진행된 이벤트가 없습니다.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if past_events %}
+            <div class="text-center mt-12">
+                <a href="{% url 'events_list' %}" class="inline-block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition">
+                    더 많은 이벤트 보기
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Organizers Section -->
+<section id="organizers" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">오거나이저 소개</h2>
+            <p class="text-lg text-gray-600">PyLadies Seoul을 이끌어가는 멋진 사람들</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for organizer in organizers %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                    {% if organizer.photo %}
+                        <img src="{{ organizer.photo.url }}" alt="{{ organizer.name_ko }}" class="w-full h-64 object-cover">
+                    {% else %}
+                        <div class="w-full h-64 bg-gray-300 flex items-center justify-center">
+                            {% include 'components/icons.html' with path_d=USER_ICON color='text-gray-400' fill_type='currentColor' use_stroke=False size='w-16 h-16' %}
+                        </div>
+                    {% endif %}
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">{{ organizer.name_ko }}</h3>
+                        <p class="text-purple-600 font-medium mb-2">{{ organizer.role_ko }}</p>
+                        {% if organizer.bio_ko %}
+                            <p class="text-gray-600 text-sm">{{ organizer.bio_ko|truncatewords:15 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-span-full text-center py-8">
+                    <p class="text-gray-500">오거나이저 정보가 곧 업데이트됩니다.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+{% include 'components/contact_section.html' with title='PyLadies Seoul에 참여하세요!' description='함께 성장하고 네트워킹할 수 있는 기회를 놓치지 마세요.' %}
+{% endblock %}

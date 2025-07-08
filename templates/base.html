@@ -1,0 +1,92 @@
+{% load static %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="{% block lang %}ko{% endblock %}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PyLadies Seoul{% endblock %}</title>
+    <meta name="description" content="{% block description %}PyLadies Seoul - 여성 개발자 네트워킹과 성장을 지원하는 커뮤니티{% endblock %}">
+    {% tailwind_css %}
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="text-2xl font-bold text-purple-600">PyLadies Seoul</a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="{% url 'coc' %}" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium">CoC</a>
+                    <a href="{% url 'events_list' %}" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium">Events</a>
+                    <a href="{% url 'contribute' %}" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium">Contribute</a>
+                    <a href="{% url 'faq' %}" class="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
+                </div>
+
+                <!-- Language Selector -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="flex items-center space-x-1 text-gray-700 hover:text-purple-600">
+                            <span class="text-sm font-medium">{% if LANGUAGE_CODE == 'ko' %}한국어{% else %}English{% endif %}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button type="button" class="text-gray-700 hover:text-purple-600 p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">PyLadies Seoul</h3>
+                    <p class="text-gray-300">여성 개발자 네트워킹과 성장을 지원하는 커뮤니티</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Links</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="{% url 'coc' %}" class="hover:text-purple-400">CoC</a></li>
+                        <li><a href="{% url 'events_list' %}" class="hover:text-purple-400">Events</a></li>
+                        <li><a href="{% url 'contribute' %}" class="hover:text-purple-400">Contribute</a></li>
+                        <li><a href="{% url 'faq' %}" class="hover:text-purple-400">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Connect</h3>
+                    <div class="flex space-x-4">
+                        <a href="{{ discord_url }}" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                            Discord 참여하기
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-300">
+                <p>&copy; 2025 PyLadies Seoul. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
