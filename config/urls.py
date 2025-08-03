@@ -15,12 +15,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+import os
+from typing import Any
+
 from django.conf import settings
+from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("main.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns: list[Any] = [
+    path("set_language/", include("django.conf.urls.i18n")),
+]
+
+urlpatterns.extend(
+    i18n_patterns(
+        path(f"{os.getenv('ADMIN_URL', 'admin')}/", admin.site.urls),
+        path("", include("main.urls")),
+    )
+)
+
+if settings.DEBUG:
+    urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))

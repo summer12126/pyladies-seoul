@@ -1,23 +1,47 @@
 # Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 # Set the working directory in the container
 WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev \
+        nodejs \
+        npm \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install uv
 RUN pip install uv
 
-# Copy the requirements file into the container at /app
-COPY requirements.txt .
+# Copy pyproject.toml, uv.lock, and README.md first for better caching
+COPY pyproject.toml uv.lock README.md ./
 
-# Install any needed packages specified in requirements.txt
-RUN uv pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies
+RUN uv sync --frozen --no-dev
 
 # Copy the rest of the application's code into the container
 COPY . .
 
-# Expose port 8000 to the outside world
-EXPOSE 8000
+# Create data directory for SQLite database
+RUN mkdir -p /app/data
 
-# Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Create staticfiles directory and set permissions
+RUN mkdir -p /app/staticfiles && chmod 755 /app/staticfiles
+
+# Build CSS
+WORKDIR /app/theme/static_src
+RUN npm install && npm run build
+
+# Switch back to app directory
+WORKDIR /app
+
+# Create a non-root user
+RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
+USER appuser
